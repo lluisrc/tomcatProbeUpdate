@@ -42,32 +42,39 @@ actualizarProbe () {
 	
 	echo "Actualizar Probe"
 
-	echo "${greenColour}Defina el path completo de CATALINA_HOME?${endColour}"
+	echo -e "${greenColour}Defina el path completo de CATALINA_HOME${endColour}"
 	read catalinaHome
+
+	echo -e "${greenColour}Defina el usuario propietario${endColour}"
+	read usuario
 
 	echo -e "${yellowColour}[alert] Anes de comenzar, asegurate de tener backup de ${catalinaHome}${endColour}"
 	read -p "Pulsa [Enter] para continuar"
 
-	if [ -d "${catalinaHome}/webapps/probe" ] then
+	if [ -d "${catalinaHome}/webapps/probe" ]; then
 		echo -e "${blueColour}[info] Ya existe el directorio ${catalinaHome}/webapps/probe"
 		echo -e "${blueColour}[info] Eliminando..."
 		rm -rf ${catalinaHome}/webapps/probe
 		rm -rf ${catalinaHome}/work/localhost/probe
 	fi
 
-	if [ -d "${catalinaHome}/webapps/probe.war" ] then
+	if [ -d "${catalinaHome}/webapps/probe.war" ]; then
                 echo -e "${blueColour}[info] Ya existe el archivo ${catalinaHome}/webapps/probe.war"
                 echo -e "${blueColour}[info] Eliminando..."
                 rm -rf ${catalinaHome}/webapps/probe.war
         fi
 
+	# wget probeSource -P ${catalinaHome}/webapps/
+	cp /home/opertec/probe.war ${catalinaHome}/webapps/
+	chown ${usuario}: ${catalinaHome}/webapps/probe.war
 	echo -e "${blueColour}[info] Descargando probe.war..."
-	wget probeSource -P ${catalinaHome}/webapps/
 
-	if [ -d "${catalinaHome}/lib/catalina.jar" ] then
+	if [ -d "${catalinaHome}/lib/catalina.jar" ]; then
                 echo -e "${blueColour}[info] Ya existe el archivo ${catalinaHome}/lib/catalina.jar"
 	else
-		wget catalinaJarSource -P ${catalinaHome}/lib/
+		# wget catalinaJarSource -P ${catalinaHome}/lib/
+		cp /home/opertec/catalina.jar ${catalinaHome}/lib/
+		chown ${usuario}: ${catalinaHome}/lib/catalina.jar
 		echo -e "${blueColour}[info] Descargando catalina.jar"
 	fi
 	
